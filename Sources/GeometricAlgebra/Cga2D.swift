@@ -67,13 +67,11 @@ extension CGA2D {
     public static let  n = CGA2D(value:1.0,index: 3) + CGA2D(value:1.0,index: 4) // e + ebar
     public static let  ñ = CGA2D(value:1.0,index: 3) - CGA2D(value:1.0,index: 4) // e - ebar
     
-    static func lift(point q:SIMD2<Double>) -> CGA2D {
+    public static func lift(point q:SIMD2<Double>) -> CGA2D {
       let p = CGA2D(e1: q.x, e2: q.y,e: -1,ebar: 0)
         
-    let m =   -1 * p * n * p
-        print("-***-")
-        print(m)
-        print("---")
+       let m =   -1 * p * n * p
+       
         //X = x^2 n + 2x - ñ,
        let x_sq = length_squared(q)
         print(x_sq)

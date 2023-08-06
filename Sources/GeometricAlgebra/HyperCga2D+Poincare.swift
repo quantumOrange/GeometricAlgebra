@@ -8,27 +8,28 @@
 import Foundation
 import simd
 import Numerics
-/*
-extension SIMD2<Double> {
-    public var cga:HyperCga2D {
-        HyperCga2D.drop(point: self)
-    }
-    
-    public var hyperbolicCGA:HyperCga2D {
-        HyperCga2D.lift(point: self)
-    }
-}
-*/
+
 extension HyperCga2D {
-    /*
-    static func fromPlane(point q:SIMD2<Double>) -> HyperCga2D {
-        let p = HyperCga2D(e1: q.x, e2: q.y,e: -1,ebar: 0)
+   
+    public static func lift(point q:SIMD2<Double>) -> HyperCga2D {
+      let p = HyperCga2D(e1: q.x, e2: q.y,e: -1,ebar: 0)
         
-       return  -1 * p * n * p
+    let m =   -1 * p * n * p
+        
+        //X = x^2 n + 2x - ñ,
+       let x_sq = length_squared(q)
+        print(x_sq)
+       let q =  HyperCga2D(e1: 2 * q.x, e2: 2 * q.y,e: 0,ebar: 0)
+        
+        let res =  q + x_sq * n - ñ
+       
+       print(res)
+        
+        return res
     }
     
-    var planePoint:SIMD2<Double> {
-        let v = self.standardForm
+    public var drop:SIMD2<Double> {
+        let v = self.standard
         
         //because the standard form is X = x^2 n + 2x - ñ,
         // we can read of
@@ -37,40 +38,36 @@ extension HyperCga2D {
         
        return [x,y]
     }
-     */
     
+   
     
-    public static func lift(point q:SIMD2<Double>) -> HyperCga2D {
-        let h = liftToHyperbolid(point:q)
-        
-        let res = HyperCga2D(e1: h.x, e2: h.y,e: 1,ebar: h.z)
-        
-        return res
-    }
-    
-
-    public var drop:SIMD2<Double> {
-        let v = self.standard
-        return dropFromHyperbolid(point: [v.e1,v.e2,v.ebar])
-    }
-  
-  
     var standard:Vector {
-        //HyperCga2D(e1: h.x, e2: h.y,e: 1,ebar: h.z)
-        // in standard form, the coeef of e is one, so re rescale:
-        let v =  vectorPart
-       
-       // assert(v.e != 0.0)
-        let  s  = 1 / v.e
-        return s * v
+        // Standard form of null vector is
+        // X = x^2 n + 2x - ñ
+        let z = self.vectorPart
+        let n = HyperCga2D.n.vectorPart
+        
+        let λ = -2 / Vector.dot(z,n)
+        
+        return (λ * z)
     }
     
+   
     public static func dline(x:HyperCga2D,y:HyperCga2D) -> HyperCga2D {
         x ^ y ^ e
     }
     
     public static func translation(x:HyperCga2D,y:HyperCga2D) -> HyperCga2D {
         (x ^ y ^ e) * e
+    }
+    
+    public static func scaledTranslation(x:HyperCga2D,y:HyperCga2D) -> HyperCga2D {
+        let T = translation(x: x, y: y)
+        let d1 = hyperbolicDistance(x: x, y: y)
+        let y_dash = x.apply(T)
+        let d2 = hyperbolicDistance(x: x, y: y_dash)
+        guard d2 > 0.0000001 else  { return .zero }
+        return (d1 / d2) * T
     }
     
     
@@ -177,3 +174,15 @@ func dropFromHyperbolid(point q:SIMD3<Double>) -> SIMD2<Double> {
     return [x,y]
 }
 
+
+extension HyperCga2D {
+    public var matrix:matrix_float4x4 {
+        var m = matrix_float4x4()
+
+        for i in 0..<16 {
+            m[i / 4][i % 4] = Float(values[i])
+        }
+        
+        return m
+    }
+}

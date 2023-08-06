@@ -82,19 +82,7 @@ extension HyperCga2D {
         Vector(e1: values[1], e2: values[2], e: values[3], ebar: values[4])
     }
     
-    /*
-    
-    var standardForm:Vector {
-        // Standard form of null vector is
-        // X = x^2 n + 2x - ñ
-        let z = self.vectorPart
-        let n = HyperCga2D.n.vectorPart
-        
-        let λ = -2 / Vector.dot(z,n)
-        
-        return (λ * z)
-    }
-    */
+
     subscript(index: Int) -> Double {
         get {
             values[index]
@@ -633,9 +621,6 @@ extension HyperCga2D {
     }
 }
 
-
-
-
 extension HyperCga2D : CustomStringConvertible {
     public var description: String {
         let a = self
@@ -647,28 +632,18 @@ extension HyperCga2D : CustomStringConvertible {
                 PuedoScaler \(a[15])
                 """
     }
-    
-    
 }
 
 extension HyperCga2D : Equatable {
     
 }
+
 extension HyperCga2D {
     func isApproxmatlyEqual(to other:HyperCga2D) -> Bool {
         zip(values, other.values).allSatisfy {
             $0.0.isApproximatelyEqual(to: $0.1,absoluteTolerance: 0.0001)
         }
     }
-}
-
-
-fileprivate func example() {
-  
-  //print("e1*e1         : "); (e1*e1).log();
-  //print("pss           : "); e1234.log();
-  //print("pss*pss       : "); (e1234*e1234).log();
-
 }
 
 

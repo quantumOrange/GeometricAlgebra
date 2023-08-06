@@ -209,7 +209,7 @@ final class HyperCGa2dTests: XCTestCase {
         
         let k = B.norm
         let B_hat = B.normalized
-        
+        XCTAssert((B_hat * B_hat).isScaler)
         XCTAssertEqual((B_hat * B_hat).scalerPart ,1,accuracy: 0.0001)
         
         
@@ -245,6 +245,7 @@ final class HyperCGa2dTests: XCTestCase {
         //
         XCTAssertEqual(HyperCga2D.hyperbolicDistance(x: P_dash, y: Q) , 0.0,accuracy: accuracy)
         let p_dash = P_dash.drop
+        
         XCTAssertEqual(p_dash.x,q.x,accuracy: accuracy)
         XCTAssertEqual(p_dash.y,q.y,accuracy: accuracy)
         
@@ -261,9 +262,9 @@ final class HyperCGa2dTests: XCTestCase {
         
         
         // And back again  - testing that ~T inverts the translation
-        let P_2 = P_dash.apply(~T)
-        let A_2 = A_dash.apply(~T)
-        let B_2 = B_dash.apply(~T)
+        let P_2 = P_dash.apply(T,alpha:-1)
+        let A_2 = A_dash.apply(T,alpha:-1)
+        let B_2 = B_dash.apply(T,alpha:-1)
         
         XCTAssertEqual(HyperCga2D.hyperbolicDistance(x: P, y: P_2),
                                                      0.0,accuracy: accuracy)
