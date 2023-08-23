@@ -18,12 +18,12 @@ extension HyperCga2D {
         
         //X = x^2 n + 2x - ñ,
        let x_sq = length_squared(q)
-        print(x_sq)
+       // print(x_sq)
        let q =  HyperCga2D(e1: 2 * q.x, e2: 2 * q.y,e: 0,ebar: 0)
         
         let res =  q + x_sq * n - ñ
        
-       print(res)
+        //print(res)
         
         return res
     }
